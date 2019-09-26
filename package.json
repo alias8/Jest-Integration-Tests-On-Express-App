@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "ts-node ./src/index.ts --env=test",
-    "test": "jest --process.node.env=test --detectOpenHandles"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
