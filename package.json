@@ -6,8 +6,8 @@
     "node": "10.x"
   },
   "scripts": {
-    "dev": "ts-node ./src/index.ts --env=dev",
-    "test": "jest"
+    "dev": "ts-node ./src/index.ts --configEnvironment=dev",
+    "test": "jest --configEnvironment=test"
   },
   "repository": {
     "type": "git",
