@@ -10,11 +10,11 @@ class App {
 
     constructor(controllers: IController[]) {
         this.app = express();
+        this.app.set("port", process.env.PORT);
         this.initializeControllers(controllers);
     }
 
-    public listen(port: string) {
-        this.app.set("port", port);
+    public listen() {
         const server = this.app.listen(this.app.get("port"), () => {
             console.log(
                 `Express running → PORT ${
