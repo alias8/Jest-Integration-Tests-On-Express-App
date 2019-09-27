@@ -9,11 +9,8 @@ export class UserController implements IController {
     }
 
     private initializeRoutes() {
-        this.router.get("/james", (
-            request: express.Request,
-            response: express.Response
-        ) => {
-            response.status(200).json({ name: 'john' });
+        this.router.get("/user", (req, res) => {
+            res.status(200).json({ name: "john" });
         });
     }
 }

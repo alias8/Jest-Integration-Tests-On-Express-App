@@ -7,14 +7,14 @@ export interface IController {
 class App {
     public app: express.Application;
 
-    constructor(controllers?: IController[]) {
+    constructor(controllers: IController[]) {
         this.app = express();
+        this.initializeControllers(controllers);
+    }
 
-        this.app.get("/james", (
-          request: express.Request,
-          response: express.Response
-        ) => {
-            response.status(200).json({ name: 'john' });
+    private initializeControllers(controllers: IController[]) {
+        controllers.forEach(controller => {
+            this.app.use("/", controller.router);
         });
     }
 }
