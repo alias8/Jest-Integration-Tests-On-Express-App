@@ -6,7 +6,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "dev": "ts-node ./src/index.ts --env=test",
+    "dev": "ts-node ./src/index.ts --env=dev",
     "test": "jest"
   },
   "repository": {
