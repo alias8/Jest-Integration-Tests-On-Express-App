@@ -12,6 +12,7 @@ import passport from "passport";
 
 import * as errorHandlers from "./handlers/errorHandlers";
 import { User } from "./models/User";
+import { performance } from "perf_hooks";
 
 export interface IController {
     router: Router;
@@ -19,13 +20,13 @@ export interface IController {
 
 class App {
     public app: express.Application;
+    private databaseConnected: boolean = false;
 
     constructor(controllers: IController[]) {
         this.app = express();
         this.app.set("port", process.env.PORT);
 
         this.setupPassport();
-        this.connectToTheDatabase();
         this.initializeLogins();
         this.setupMiddleware();
         this.initializeControllers(controllers);
@@ -41,7 +42,33 @@ class App {
             );
         });
     }
-    public setupPassport() {
+
+    public async connectToTheDatabase() {
+        if(this.databaseConnected) {
+            return;
+        }
+        const t0 = performance.now();
+        mongoose.Promise = global.Promise;
+        return mongoose
+          .connect(process.env.DATABASE || "", {
+              useCreateIndex: true,
+              useNewUrlParser: true
+          })
+          .then(() => {
+              this.databaseConnected = true;
+              const t1 = performance.now();
+              console.log("Call to connectdatabase took " + (t1 - t0) + " milliseconds.");
+              /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+          })
+          .catch(err => {
+              console.log(
+                "MongoDB connection error. Please make sure MongoDB is running. " +
+                err
+              );
+          });
+    }
+
+    private setupPassport() {
         passport.use(User.createStrategy());
         passport.serializeUser(User.serializeUser());
         passport.deserializeUser(User.deserializeUser());
@@ -68,24 +95,6 @@ class App {
             (req as any).login = promisify(req.login.bind(req));
             next();
         });
-    }
-
-    private connectToTheDatabase() {
-        mongoose.Promise = global.Promise;
-        mongoose
-          .connect(process.env.DATABASE || "", {
-              useCreateIndex: true,
-              useNewUrlParser: true
-          })
-          .then(() => {
-              /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
-          })
-          .catch(err => {
-              console.log(
-                "MongoDB connection error. Please make sure MongoDB is running. " +
-                err
-              );
-          });
     }
 
     private setupMiddleware() {

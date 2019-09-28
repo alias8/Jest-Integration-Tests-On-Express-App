@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "ts-node ./src/index.ts --configEnvironment=dev",
-    "test": "jest --configEnvironment=test"
+    "test": "jest --configEnvironment=test",
+    "add-sample-data": "ts-node ./src/data/sample-data.ts",
+    "delete-sample-data": "ts-node ./src/data/sample-data.ts --delete"
   },
   "repository": {
     "type": "git",
