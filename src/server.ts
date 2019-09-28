@@ -3,6 +3,7 @@ import path from "path";
 import yargs from "yargs";
 import App from "./app";
 import { UserController } from "./controllers/userController";
+import { StoreController } from "./controllers/storeController";
 
 dotenv.config({
     path: path.resolve(
@@ -13,4 +14,7 @@ dotenv.config({
     )
 });
 
-export const app = new App([new UserController()]);
+export const app = new App([
+  new UserController(),
+  new StoreController()
+]);

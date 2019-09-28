@@ -6,6 +6,7 @@ import mongoose, {
     PassportLocalSchema,
     Schema
 } from "mongoose";
+// @ts-ignore
 import mongodbErrorHandler from "mongoose-mongodb-errors";
 import passportLocalMongoose from "passport-local-mongoose";
 import validator from "validator";

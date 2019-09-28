@@ -1,7 +1,7 @@
 import dompurify from "dompurify";
 import mongoose, { model } from "mongoose";
+// @ts-ignore
 import slug from "slugs";
-import { DOMPurify } from "../helpers";
 import { IUserModel } from "./User";
 
 export interface IStoreDocument extends mongoose.Document {
@@ -113,9 +113,9 @@ storeSchema.pre("save", async function(next) {
     }
 
     // sanitize all text inputs
-    that.name = DOMPurify.sanitize(that.name);
-    that.description = DOMPurify.sanitize(that.description);
-    that.location.address = DOMPurify.sanitize(that.description);
+    // that.name = DOMPurify.sanitize(that.name);
+    // that.description = DOMPurify.sanitize(that.description);
+    // that.location.address = DOMPurify.sanitize(that.description);
 
     next();
 });
