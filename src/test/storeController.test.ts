@@ -22,17 +22,4 @@ test("get all stores page out of bounds", async () => {
     .get("/stores/page/100")
     .expect(302)
 });
-//
-// test("registering new user works", async () => {
-//   const newUser = {
-//     name: "testuser",
-//     email: "newuseremail@email.com",
-//     password: "password123"
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(8000)
-// });
+

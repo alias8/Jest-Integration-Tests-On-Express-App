@@ -53,35 +53,36 @@ export class UserController implements IController {
       response: express.Response,
       next: express.NextFunction
     ) => {
-        request.sanitizeBody("name");
-        request.checkBody("name", "You must supply a name!").notEmpty();
-        request.checkBody("email", "That Email is not valid!").isEmail();
-        request.sanitizeBody("email").normalizeEmail({
-            gmail_remove_dots: false,
-            gmail_remove_subaddress: false
-        });
-        request.checkBody("password", "Password Cannot be Blank!").notEmpty();
-        request
-          .checkBody(
-            "password-confirm",
-            "Confirmed Password cannot be blank!"
-          )
-          .notEmpty();
-        request
-          .checkBody("password-confirm", "Oops! Your passwords do not match")
-          .equals(request.body.password);
-
-        const errors = request.validationErrors();
-        if (errors) {
-            request.flash("error", errors.map((err: any) => err.msg));
-            response.render("register", {
-                body: request.body,
-                flashes: request.flash(),
-                title: "Register"
-            });
-            return; // stop the fn from running
-        }
-        next(); // there were no errors!
+        response.status(200).json({ name: "john" });
+        // request.sanitizeBody("name");
+        // request.checkBody("name", "You must supply a name!").notEmpty();
+        // request.checkBody("email", "That Email is not valid!").isEmail();
+        // request.sanitizeBody("email").normalizeEmail({
+        //     gmail_remove_dots: false,
+        //     gmail_remove_subaddress: false
+        // });
+        // request.checkBody("password", "Password Cannot be Blank!").notEmpty();
+        // request
+        //   .checkBody(
+        //     "password-confirm",
+        //     "Confirmed Password cannot be blank!"
+        //   )
+        //   .notEmpty();
+        // request
+        //   .checkBody("password-confirm", "Oops! Your passwords do not match")
+        //   .equals(request.body.password);
+        //
+        // const errors = request.validationErrors();
+        // if (errors) {
+        //     request.flash("error", errors.map((err: any) => err.msg));
+        //     response.render("register", {
+        //         body: request.body,
+        //         flashes: request.flash(),
+        //         title: "Register"
+        //     });
+        //     return; // stop the fn from running
+        // }
+        // next(); // there were no errors!
     };
 
     private register = async (
