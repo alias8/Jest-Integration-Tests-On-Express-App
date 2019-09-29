@@ -47,7 +47,6 @@ class App {
         if(this.databaseConnected) {
             return;
         }
-        const t0 = performance.now();
         mongoose.Promise = global.Promise;
         return mongoose
           .connect(process.env.DATABASE || "", {
@@ -56,8 +55,6 @@ class App {
           })
           .then(() => {
               this.databaseConnected = true;
-              const t1 = performance.now();
-              console.log("Call to connectdatabase took " + (t1 - t0) + " milliseconds.");
               /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
           })
           .catch(err => {

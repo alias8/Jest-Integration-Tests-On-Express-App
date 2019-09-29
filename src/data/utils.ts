@@ -24,16 +24,9 @@ const users = JSON.parse(
 );
 
 export async function deleteData() {
-  const t0 = performance.now();
-  console.log("😢😢 Goodbye Data...");
   await Store.deleteMany({ name: /.*/ });
   // await Review.remove();
   await User.deleteMany({ name: /.*/ });
-  console.log(
-    "Data Deleted. To load sample data, run\n\n\t npm run sample\n\n"
-  );
-  const t1 = performance.now();
-  console.log("Call to deleteData took " + (t1 - t0) + " milliseconds.");
 }
 
 export async function loadData() {

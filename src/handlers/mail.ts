@@ -4,7 +4,6 @@ import nodemailer from "nodemailer";
 import path from "path";
 import pug from "pug";
 import { IUserModel } from "../models/User";
-import { viewDirectory } from "../paths";
 
 const transport = nodemailer.createTransport({
     auth: {
@@ -17,11 +16,12 @@ const transport = nodemailer.createTransport({
 });
 
 const generateHTML = (filename: string, options = {}) => {
-    const html = pug.renderFile(
-        path.join(viewDirectory, "email", `${filename}.pug`),
-        options
-    );
-    return juice(html);
+    return "";
+    // const html = pug.renderFile(
+    //     path.join(viewDirectory, "email", `${filename}.pug`),
+    //     options
+    // );
+    // return juice(html);
 };
 
 export const sendEmail = async ({

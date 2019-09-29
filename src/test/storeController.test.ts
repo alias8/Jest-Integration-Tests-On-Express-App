@@ -1,9 +1,12 @@
 import request from "supertest";
-import { app } from "../server";
 import { deleteData } from "../data/utils";
+import { app } from "../server";
+
+beforeAll(async () => {
+  await app.connectToTheDatabase(); // takes about 2 seconds
+});
 
 beforeEach(async () => {
-  await app.connectToTheDatabase(); // takes about 2 seconds
   await deleteData(); // takes about 0.5 seconds
 });
 
@@ -17,5 +20,19 @@ test("get all stores", async () => {
 test("get all stores page out of bounds", async () => {
   await request(app.app)
     .get("/stores/page/100")
-    .expect(404)
+    .expect(302)
 });
+//
+// test("registering new user works", async () => {
+//   const newUser = {
+//     name: "testuser",
+//     email: "newuseremail@email.com",
+//     password: "password123"
+//   };
+//   await request(app.app)
+//     .post("/register")
+//     .send({
+//       ...newUser
+//     })
+//     .expect(8000)
+// });
