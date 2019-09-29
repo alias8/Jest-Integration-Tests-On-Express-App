@@ -14,8 +14,6 @@ export class UserController implements IController {
     }
 
     private initializeRoutes() {
-        this.router.get("/login", this.loginForm);
-        this.router.get("/register", this.registerForm);
         this.router.post(
           "/register",
           this.validateRegister,
@@ -32,25 +30,9 @@ export class UserController implements IController {
         this.router.get(
           "/account",
           AuthenticationController.isLoggedIn,
-          this.account
         );
         this.router.post("/account", catchErrors(this.updateAccount));
     }
-
-
-    private loginForm = (
-      request: express.Request,
-      response: express.Response
-    ) => {
-        response.render("login", { title: "Login" });
-    };
-
-    private registerForm = (
-      request: express.Request,
-      response: express.Response
-    ) => {
-        response.render("register", { title: "Register" });
-    };
 
     private validateRegister = (
       request: express.Request,
@@ -101,13 +83,6 @@ export class UserController implements IController {
         next(); // pass to authController.login
     };
 
-    private account = (
-      request: express.Request,
-      response: express.Response
-    ) => {
-        response.render("account", { title: "Edit your account" });
-    };
-
     private updateAccount = async (
       request: express.Request,
       response: express.Response
@@ -123,7 +98,7 @@ export class UserController implements IController {
           { $set: updates },
           { new: true, runValidators: true, context: "query" }
         );
-        request.flash("success", "Updated the profile!");
+
         response.redirect("/");
     };
 }

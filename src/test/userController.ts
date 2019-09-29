@@ -108,4 +108,3 @@ test("test good registration", async () => {
     .expect(302) // redirect
     .expect('Location', /\/$/);
 });
-
