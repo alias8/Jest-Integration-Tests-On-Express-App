@@ -10,11 +10,11 @@ import { IUserModel, User } from "../models/User";
 import { StoreController } from "./storeController";
 
 export class AuthenticationController implements IController {
-  public static login = passport.authenticate("local", {
-    failureFlash: "Failed Login!",
-    failureRedirect: "/login",
-    successFlash: "You are now logged in",
-    successRedirect: "/"
+  public static login = passport.authenticate('local', {}, (req, res) => {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.redirect('/');
+    // if auth fails, 401 is returned
   });
 
   public static isLoggedIn = (

@@ -20,6 +20,6 @@ test("get all stores", async () => {
 test("get all stores page out of bounds", async () => {
   await request(app.app)
     .get("/stores/page/100")
-    .expect(302)
+    .expect(302) // redirect
 });
 
