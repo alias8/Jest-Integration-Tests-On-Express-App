@@ -14,9 +14,6 @@ export class UserController implements IController {
     }
 
     private initializeRoutes() {
-        this.router.get("/user", (req, response) => {
-            response.status(200).json({ name: "john" });
-        });
         this.router.get("/login", this.loginForm);
         this.router.get("/register", this.registerForm);
         this.router.post(
