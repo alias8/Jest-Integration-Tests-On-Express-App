@@ -2,6 +2,7 @@ import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 import htmlToText from "html-to-text";
 import juice from "juice";
+import nodemailer from "nodemailer";
 import path from "path";
 import pug from "pug";
 import yargs from "yargs";
@@ -17,6 +18,26 @@ dotenv.config({
     )
 });
 
+if (
+    !process.env.MAIL_PASS ||
+    !process.env.MAIL_USER ||
+    !process.env.MAIL_HOST ||
+    !process.env.MAIL_PORT
+) {
+    throw new Error("Mailtrap environment variables not defined");
+}
+// Use this for developemnt and testing environments
+const transport = nodemailer.createTransport({
+    auth: {
+        pass: process.env.MAIL_PASS,
+        user: process.env.MAIL_USER
+    },
+    debug: true,
+    host: process.env.MAIL_HOST,
+    port: (process.env.MAIL_PORT as unknown) as number
+});
+
+// Use this for production environment
 const sendGridAPIKey = process.env.sendGridAPIKey;
 if (!sendGridAPIKey) {
     throw new Error("sendGridAPIKey is undefined");
@@ -44,20 +65,28 @@ export const sendEmail = async ({
 }) => {
     const html = generateHTML(filename, { user, subject, resetURL, filename });
     const text = htmlToText.fromString(html);
-    await sgMail
-        .send({
+    if (process.env.NODE_ENV === "prod") {
+        await sgMail
+            .send({
+                from: "James Kirk <jameskirk8@gmail.com>",
+                html,
+                subject,
+                text,
+                to: user.email
+            })
+            .then(response => {
+                return response[0].complete;
+            })
+            .catch(error => {
+                return error.message;
+            });
+    } else {
+        await transport.sendMail({
             from: "James Kirk <jameskirk8@gmail.com>",
             html,
             subject,
             text,
             to: user.email
-        })
-        .then(response => {
-            console.log("----------------1");
-            return response[0].complete;
-        })
-        .catch(error => {
-            console.log("----------------2");
-            return error.message;
         });
+    }
 };

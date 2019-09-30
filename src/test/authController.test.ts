@@ -48,13 +48,13 @@ async function logout() {
         .expect("Location", /\/$/);
 }
 
-// test("test login", async () => {
-//     await login();
-// });
-//
-// test("test logout", async () => {
-//     await logout();
-// });
+test("test login", async () => {
+    await login();
+});
+
+test("test logout", async () => {
+    await logout();
+});
 
 test("test forgot", async () => {
     await register();
