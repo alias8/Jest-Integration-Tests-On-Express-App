@@ -1,23 +1,31 @@
+import sgMail from "@sendgrid/mail";
+import dotenv from "dotenv";
 import htmlToText from "html-to-text";
 import juice from "juice";
-import nodemailer from "nodemailer";
 import path from "path";
 import pug from "pug";
+import yargs from "yargs";
 import { IUserModel } from "../models/User";
 
-const transport = nodemailer.createTransport({
-    auth: {
-        pass: process.env.MAIL_PASS,
-        user: process.env.MAIL_USER
-    },
-    debug: true,
-    host: process.env.MAIL_HOST,
-    port: (process.env.MAIL_PORT as unknown) as number
+dotenv.config({
+    path: path.resolve(
+        __dirname,
+        "..",
+        "config",
+        yargs.argv.configEnvironment as string,
+        ".env"
+    )
 });
+
+const sendGridAPIKey = process.env.sendGridAPIKey;
+if (!sendGridAPIKey) {
+    throw new Error("sendGridAPIKey is undefined");
+}
+sgMail.setApiKey(sendGridAPIKey!);
 
 const generateHTML = (filename: string, options = {}) => {
     const html = pug.renderFile(
-        path.resolve("..", "views", `${filename}.pug`),
+        path.resolve(__dirname, "..", "views", `${filename}.pug`),
         options
     );
     return juice(html);
@@ -36,12 +44,20 @@ export const sendEmail = async ({
 }) => {
     const html = generateHTML(filename, { user, subject, resetURL, filename });
     const text = htmlToText.fromString(html);
-    const mailOptions = {
-        from: `Wes Bos <noreply@wesbos.com>`,
-        html,
-        subject,
-        text,
-        to: user.email
-    };
-    await transport.sendMail(mailOptions);
+    await sgMail
+        .send({
+            from: "James Kirk <jameskirk8@gmail.com>",
+            html,
+            subject,
+            text,
+            to: user.email
+        })
+        .then(response => {
+            console.log("----------------1");
+            return response[0].complete;
+        })
+        .catch(error => {
+            console.log("----------------2");
+            return error.message;
+        });
 };

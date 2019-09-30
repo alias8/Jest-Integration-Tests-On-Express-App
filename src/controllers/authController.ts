@@ -87,10 +87,9 @@ export class AuthenticationController implements IController {
             // 3. sendEmail back token
             await sendEmail({
                 filename: "password-reset",
+                resetURL: `http://${request.headers.host}/account/reset/${user.resetPasswordToken}`,
                 subject: "Password Reset",
-                user,
-
-                resetURL: `http://${request.headers.host}/account/reset/${user.resetPasswordToken}`
+                user
             });
             finalStage();
         }

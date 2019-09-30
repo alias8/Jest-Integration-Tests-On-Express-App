@@ -4,7 +4,7 @@ import { User } from "../models/User";
 import { app } from "../server";
 
 const newUser = {
-    email: "newuseremail@gmail.com",
+    email: "jameskirk8@gmail.com",
     name: "testuser",
     password: "password123",
     "password-confirm": "password123"
@@ -48,13 +48,13 @@ async function logout() {
         .expect("Location", /\/$/);
 }
 
-test("test login", async () => {
-    await login();
-});
-
-test("test logout", async () => {
-    await logout();
-});
+// test("test login", async () => {
+//     await login();
+// });
+//
+// test("test logout", async () => {
+//     await logout();
+// });
 
 test("test forgot", async () => {
     await register();

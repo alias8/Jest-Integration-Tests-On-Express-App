@@ -9,7 +9,8 @@
     "dev": "ts-node ./src/index.ts --configEnvironment=dev",
     "test": "jest --runInBand --configEnvironment=test ",
     "add-sample-data": "ts-node ./src/data/sample-data.ts",
-    "delete-sample-data": "ts-node ./src/data/sample-data.ts --delete"
+    "delete-sample-data": "ts-node ./src/data/sample-data.ts --delete",
+    "email": "ts-node ./src/handlers/mail.ts --configEnvironment=test"
   },
   "repository": {
     "type": "git",
@@ -74,7 +75,6 @@
     "@types/mongoose": "^5.3.26",
     "@types/multer": "^1.3.7",
     "@types/node": "^11.13.4",
-    "@types/nodemailer": "^4.6.7",
     "@types/optimize-css-assets-webpack-plugin": "^1.3.4",
     "@types/passport": "^1.0.0",
     "@types/passport-local-mongoose": "^4.0.12",
@@ -96,7 +96,6 @@
     "lint-staged": "^8.1.5",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
-    "nodemon": "^1.18.11",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "prettier": "^1.17.0",
@@ -116,6 +115,7 @@
     "yargs": "^13.2.4"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "build": "^0.1.4",
