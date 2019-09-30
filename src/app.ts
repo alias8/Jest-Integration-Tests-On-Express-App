@@ -10,9 +10,9 @@ import mongoose from "mongoose";
 import { AddressInfo } from "net";
 import passport from "passport";
 
+import { performance } from "perf_hooks";
 import * as errorHandlers from "./handlers/errorHandlers";
 import { User } from "./models/User";
-import { performance } from "perf_hooks";
 
 export interface IController {
     router: Router;
@@ -25,6 +25,7 @@ class App {
     constructor(controllers: IController[]) {
         this.app = express();
         this.app.set("port", process.env.PORT);
+        this.app.set("view engine", "pug");
 
         this.setupPassport();
         this.initializeLogins();
@@ -44,25 +45,25 @@ class App {
     }
 
     public async connectToTheDatabase() {
-        if(this.databaseConnected) {
+        if (this.databaseConnected) {
             return;
         }
         mongoose.Promise = global.Promise;
         return mongoose
-          .connect(process.env.DATABASE || "", {
-              useCreateIndex: true,
-              useNewUrlParser: true
-          })
-          .then(() => {
-              this.databaseConnected = true;
-              /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
-          })
-          .catch(err => {
-              console.log(
-                "MongoDB connection error. Please make sure MongoDB is running. " +
-                err
-              );
-          });
+            .connect(process.env.DATABASE || "", {
+                useCreateIndex: true,
+                useNewUrlParser: true
+            })
+            .then(() => {
+                this.databaseConnected = true;
+                /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+            })
+            .catch(err => {
+                console.log(
+                    "MongoDB connection error. Please make sure MongoDB is running. " +
+                        err
+                );
+            });
     }
 
     private setupPassport() {
@@ -76,15 +77,15 @@ class App {
         // Sessions allow us to store data on visitors from request to request
         // This keeps users logged in and allows us to sendEmail flash messages
         this.app.use(
-          session({
-              name: process.env.KEY,
-              resave: false,
-              saveUninitialized: false,
-              secret: process.env.SECRET || "",
-              store: new MongoStore({
-                  mongooseConnection: mongoose.connection
-              })
-          })
+            session({
+                name: process.env.KEY,
+                resave: false,
+                saveUninitialized: false,
+                secret: process.env.SECRET || "",
+                store: new MongoStore({
+                    mongooseConnection: mongoose.connection
+                })
+            })
         );
 
         // promisify some callback based APIs

@@ -16,12 +16,11 @@ const transport = nodemailer.createTransport({
 });
 
 const generateHTML = (filename: string, options = {}) => {
-    return "";
-    // const html = pug.renderFile(
-    //     path.join(viewDirectory, "email", `${filename}.pug`),
-    //     options
-    // );
-    // return juice(html);
+    const html = pug.renderFile(
+        path.resolve("..", "views", `${filename}.pug`),
+        options
+    );
+    return juice(html);
 };
 
 export const sendEmail = async ({
