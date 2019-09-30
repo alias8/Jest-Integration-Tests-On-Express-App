@@ -19,10 +19,10 @@ export class UserController implements IController {
             this.validateRegister,
             this.register,
             passport.authenticate("local"),
-            (req, res) => {
+            (request: express.Request, response: express.Response) => {
                 // If this function gets called, authentication was successful.
                 // `req.user` contains the authenticated user.
-                res.redirect("/");
+                response.json({ user: request.user });
                 // if auth fails, 401 is returned
             }
         );

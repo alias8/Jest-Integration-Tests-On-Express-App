@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "ts-node ./src/index.ts --configEnvironment=dev",
-    "test": "jest --runInBand --configEnvironment=test ",
+    "test": "jest --runInBand --configEnvironment=test --testTimeout=15000",
     "add-sample-data": "ts-node ./src/data/sample-data.ts",
     "delete-sample-data": "ts-node ./src/data/sample-data.ts --delete",
     "email": "ts-node ./src/handlers/mail.ts --configEnvironment=test"

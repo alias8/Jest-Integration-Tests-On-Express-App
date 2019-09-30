@@ -18,10 +18,9 @@ export class AuthenticationController implements IController {
         // 1. check if user auth
         if (request.isAuthenticated()) {
             next();
-            return;
         }
 
-        response.redirect("/login");
+        response.json({ loggedIn: false });
     };
     public router = express.Router();
     private user = User;
@@ -37,29 +36,27 @@ export class AuthenticationController implements IController {
             (request: express.Request, response: express.Response) => {
                 // If this function gets called, authentication was successful.
                 // `req.user` contains the authenticated user.
-                response.redirect("/");
+                response.json({ user: request.user });
                 // if auth fails, 401 is returned
             }
         );
 
         this.router.get("/logout", this.logout);
         this.router.post("/account/forgot", catchErrors(this.forgot));
-        this.router.get("/account/reset/:token", catchErrors(this.reset));
+        this.router.get(
+            "/account/reset/:token",
+            catchErrors(this.isTokenValid)
+        );
         this.router.post(
             "/account/reset/:token",
             this.confirmPasswords,
             catchErrors(this.update)
         );
-        this.router.get(
-            "/add",
-            AuthenticationController.isLoggedIn,
-            StoreController.addStore
-        );
     }
 
     private logout = (request: express.Request, response: express.Response) => {
         request.logout();
-        response.redirect("/");
+        response.json({ loggedIn: false });
     };
 
     private forgot = async (
@@ -71,7 +68,9 @@ export class AuthenticationController implements IController {
          * that email exists or not
          * */
         const finalStage = () => {
-            response.redirect("/login");
+            response.json({
+                message: `A password reset email has been sent to ${request.body.email}`
+            });
         };
 
         // 1 see if user with that email exists
@@ -94,7 +93,7 @@ export class AuthenticationController implements IController {
             finalStage();
         }
     };
-    private reset = async (
+    private isTokenValid = async (
         request: express.Request,
         response: express.Response
     ) => {
@@ -102,14 +101,16 @@ export class AuthenticationController implements IController {
             resetPasswordExpires: { $gt: Date.now() },
             resetPasswordToken: request.params.token
         });
-
         if (!user) {
-            request.flash("error", "Password reset is invalid or has expired");
-            return response.redirect("/login");
+            response.json({
+                error: "Password reset is invalid or has expired",
+                tokenValid: false
+            });
         }
-
         // if user is found, show reset pasword form
-        response.render("reset", { title: "Reset your password" });
+        response.json({
+            tokenValid: true
+        });
     };
     private confirmPasswords = (
         request: express.Request,
@@ -129,11 +130,13 @@ export class AuthenticationController implements IController {
 
         const errors = request.validationErrors();
         if (errors) {
-            request.flash("error", errors.map((err: any) => err.msg));
-            response.redirect("back");
+            response.json({
+                errors: errors.map((err: any) => err.msg)
+            });
         }
         next(); // there were no errors!
     };
+
     private update = async (
         request: express.Request,
         response: express.Response
@@ -144,8 +147,10 @@ export class AuthenticationController implements IController {
         });
 
         if (!user) {
-            request.flash("error", "Password resest is invalid or has expired");
-            response.redirect("/login");
+            response.json({
+                error: "Password reset is invalid or has expired",
+                tokenValid: false
+            });
         } else {
             const setPassword = promisify(user.setPassword.bind(user));
             await setPassword(request.body.password);
@@ -154,11 +159,9 @@ export class AuthenticationController implements IController {
             const updatedUser = await user.save();
 
             await (request as any).login(updatedUser);
-            request.flash(
-                "Success",
-                "Your password has been reset! You are now logged in"
-            );
-            response.redirect("/");
+            response.json({
+                message: "Your password has been reset! You are now logged in"
+            });
         }
     };
 }

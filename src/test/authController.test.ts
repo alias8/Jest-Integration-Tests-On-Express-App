@@ -1,6 +1,6 @@
 import request from "supertest";
 import { deleteData } from "../data/utils";
-import { User } from "../models/User";
+import { IUserModel, User } from "../models/User";
 import { app } from "../server";
 
 const newUser = {
@@ -18,37 +18,64 @@ beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
 });
 
-async function register() {
-    await request(app.app)
+async function register(): Promise<IUserModel> {
+    return await request(app.app)
         .post("/register")
         .send({
             ...newUser
         })
-        .expect(302) // redirect
-        .expect("Location", /\/$/);
+        .then(response => {
+            expect(response.body.user.email).toBe(newUser.email);
+            return response.body.user;
+        });
 }
 
-async function login() {
-    await register();
-    await request(app.app)
+async function login(): Promise<IUserModel> {
+    return await request(app.app)
         .post("/login")
         .type("form")
         .send({
             email: newUser.email,
             password: newUser.password
         })
-        .expect(302) // redirect
-        .expect("Location", /\/$/);
+        .then(response => {
+            expect(response.body.user.email).toBe(newUser.email);
+            return response.body.user;
+        });
 }
 
 async function logout() {
     await request(app.app)
         .get("/logout")
-        .expect(302) // redirect
-        .expect("Location", /\/$/);
+        .expect({
+            loggedIn: false
+        });
 }
 
+async function sendResetEmail() {
+    let user = await register();
+    expect(user!.resetPasswordToken).toBe(undefined);
+    await request(app.app)
+        .post("/account/forgot")
+        .send({
+            email: newUser.email
+        })
+        .then(response => {
+            expect(response.body.message).toBe(
+                `A password reset email has been sent to ${newUser.email}`
+            );
+        });
+    user = await login();
+    expect(user!.resetPasswordToken).not.toBe(undefined);
+    return user;
+}
+
+test("test register", async () => {
+    await register();
+});
+
 test("test login", async () => {
+    await register();
     await login();
 });
 
@@ -57,16 +84,55 @@ test("test logout", async () => {
 });
 
 test("test forgot", async () => {
-    await register();
-    const userBefore = await User.findOne({ email: newUser.email });
-    expect(userBefore!.resetPasswordToken).toBe(undefined);
+    await sendResetEmail();
+});
+
+test("test token reset with valid token", async () => {
+    const user = await sendResetEmail();
     await request(app.app)
-        .post("/account/forgot")
+        .get(`/account/reset/${user!.resetPasswordToken}`)
+        .expect({
+            tokenValid: true
+        });
+});
+
+test("test token reset with invalid token", async () => {
+    const user = await sendResetEmail();
+    const userInDatabase = await User.findOne({
+        email: user.email
+    });
+    userInDatabase!.resetPasswordExpires = Date.now() - 1000 * 60;
+    await userInDatabase!.save();
+    await request(app.app)
+        .get(`/account/reset/${user!.resetPasswordToken}`)
+        .expect({
+            error: "Password reset is invalid or has expired",
+            tokenValid: false
+        });
+});
+
+test("test change password", async () => {
+    const user = await sendResetEmail();
+    await request(app.app)
+        .post(`/account/reset/${user!.resetPasswordToken}`)
         .send({
-            email: newUser.email
+            password: "123",
+            "password-confirm": "123"
         })
-        .expect(302) // redirect
-        .expect("Location", /\/login$/);
-    const userAfter = await User.findOne({ email: newUser.email });
-    expect(userAfter!.resetPasswordToken).not.toBe(undefined);
+        .expect({
+            message: "Your password has been reset! You are now logged in"
+        });
+});
+
+test("test change password when passwords don't match", async () => {
+    const user = await sendResetEmail();
+    await request(app.app)
+        .post(`/account/reset/${user!.resetPasswordToken}`)
+        .send({
+            password: "123",
+            "password-confirm": "1234"
+        })
+        .expect({
+            errors: ["Oops! Your passwords do not match"]
+        });
 });
