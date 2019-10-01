@@ -27,8 +27,11 @@ export class UserController implements IController {
             }
         );
 
-        this.router.get("/account", AuthenticationController.isLoggedIn);
-        this.router.post("/account", catchErrors(this.updateAccount));
+        this.router.post(
+            "/account",
+            AuthenticationController.isLoggedIn,
+            catchErrors(this.updateAccount)
+        );
     }
 
     private validateRegister = (
@@ -96,6 +99,8 @@ export class UserController implements IController {
             { new: true, runValidators: true, context: "query" }
         );
 
-        response.redirect("/");
+        response.json({
+            ...updates
+        });
     };
 }
