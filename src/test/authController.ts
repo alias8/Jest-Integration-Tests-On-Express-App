@@ -1,14 +1,8 @@
 import request from "supertest";
 import { deleteData } from "../data/utils";
-import { IUserModel, User } from "../models/User";
+import { User } from "../models/User";
 import { app } from "../server";
-
-const newUser = {
-    email: "jameskirk8@gmail.com",
-    name: "testuser",
-    password: "password123",
-    "password-confirm": "password123"
-};
+import { login, logout, newUser, register } from "./util";
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -17,40 +11,6 @@ beforeAll(async () => {
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
 });
-
-async function register(): Promise<IUserModel> {
-    return await request(app.app)
-        .post("/register")
-        .send({
-            ...newUser
-        })
-        .then(response => {
-            expect(response.body.user.email).toBe(newUser.email);
-            return response.body.user;
-        });
-}
-
-async function login(): Promise<IUserModel> {
-    return await request(app.app)
-        .post("/login")
-        .type("form")
-        .send({
-            email: newUser.email,
-            password: newUser.password
-        })
-        .then(response => {
-            expect(response.body.user.email).toBe(newUser.email);
-            return response.body.user;
-        });
-}
-
-async function logout() {
-    await request(app.app)
-        .get("/logout")
-        .expect({
-            loggedIn: false
-        });
-}
 
 async function sendResetEmail() {
     let user = await register();

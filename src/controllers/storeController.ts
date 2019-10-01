@@ -69,7 +69,7 @@ export class StoreController implements IController {
             AuthenticationController.isLoggedIn,
             catchErrors(this.getHearts)
         );
-        this.router.get("/map", catchErrors(this.mapPage));
+
         this.router.get("/", catchErrors(this.getStores));
         this.router.get("/stores", catchErrors(this.getStores));
         this.router.get("/top", catchErrors(this.getTopStores));
@@ -101,7 +101,7 @@ export class StoreController implements IController {
             // what should response be?
             response.redirect(`/stores/page/${pages}`);
         }
-        response.status(200).send({
+        response.send({
             count,
             page,
             pages,
@@ -300,7 +300,7 @@ export class StoreController implements IController {
             { [operator]: { hearts: request.params.id } },
             { new: true }
         );
-        response.json(user);
+        response.json({ user });
     };
 
     private getHearts = async (
@@ -311,14 +311,7 @@ export class StoreController implements IController {
             // @ts-ignore
             _id: { $in: request.user.hearts }
         });
-        response.render("stores", { title: "Hearted Stores" });
-    };
-
-    private mapPage = async (
-        request: express.Request,
-        response: express.Response
-    ) => {
-        response.render("map", { title: "Map" });
+        response.json({ stores });
     };
 
     private getTopStores = async (
@@ -327,6 +320,6 @@ export class StoreController implements IController {
     ) => {
         // 1. query the database for a list of all stores
         const stores = await Store.getTopStores();
-        response.render("topStores", { stores, title: "Top Stores!" });
+        response.json({ stores });
     };
 }
