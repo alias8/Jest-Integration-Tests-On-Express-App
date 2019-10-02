@@ -19,7 +19,7 @@ export class AuthenticationController implements IController {
         if (request.isAuthenticated()) {
             next();
         } else {
-            response.json({ loggedIn: false });
+            response.status(401).send();
         }
     };
     public router = express.Router();

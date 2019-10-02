@@ -1,7 +1,6 @@
 import request from "supertest";
 import { deleteData, loadData } from "../data/utils";
 import { app } from "../server";
-import { newUser, register } from "./util";
 
 /*
 * It seems authentication only works when we do it like this: const loggedInUser = request.agent(app.app);
@@ -16,7 +15,6 @@ import { newUser, register } from "./util";
       date: 'Wed, 02 Oct 2019 03:29:45 GMT',
       connection: 'close' }
 * */
-const loggedInUser = request.agent(app.app);
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -24,118 +22,136 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
+});
+
+test("registering with password mismatch returns error", async () => {
+    const newUser = {
+        email: "newuseremail@email.com",
+        name: "testuser",
+        password: "password123",
+        "password-confirm": "password1234"
+    };
+    await request
+        .agent(app.app)
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(400)
+        .expect({
+            body: {
+                ...newUser
+            },
+            errors: ["Oops! Your passwords do not match"]
+        });
+});
+
+test("registering with empty password returns error", async () => {
+    const newUser = {
+        email: "newuseremail@email.com",
+        name: "testuser",
+        password: "",
+        "password-confirm": ""
+    };
+    await request
+        .agent(app.app)
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(400)
+        .expect({
+            body: {
+                ...newUser
+            },
+            errors: [
+                "Password Cannot be Blank!",
+                "Confirmed Password cannot be blank!"
+            ]
+        });
+});
+
+test("registering with no name returns error", async () => {
+    const newUser = {
+        email: "newuseremail@email.com",
+        name: "",
+        password: "password123",
+        "password-confirm": "password123"
+    };
+    await request
+        .agent(app.app)
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(400)
+        .expect({
+            body: {
+                ...newUser
+            },
+            errors: ["You must supply a name!"]
+        });
+});
+
+test("registering with invalid email returns error", async () => {
+    const newUser = {
+        email: "newuseremail@",
+        name: "testuser",
+        password: "password123",
+        "password-confirm": "password123"
+    };
+    await request
+        .agent(app.app)
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(400)
+        .expect({
+            body: {
+                ...newUser
+            },
+            errors: ["That Email is not valid!"]
+        });
+});
+
+test("test good registration", async () => {
+    const newUser = {
+        email: "newuseremail@gmail.com",
+        name: "testuser",
+        password: "password123",
+        "password-confirm": "password123"
+    };
+    await request
+        .agent(app.app)
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(200)
+        .then((response: any) => {
+            expect(response.body.user.email).toBe(newUser.email);
+        });
+});
+
+test("user can update their details", async () => {
+    const newUser = {
+        email: "newuseremail@gmail.com",
+        name: "testuser",
+        password: "password123",
+        "password-confirm": "password123"
+    };
+    const loggedInUser = request.agent(app.app);
     await loggedInUser
         .post("/register")
         .send({
             ...newUser
         })
+        .expect(200)
         .then((response: any) => {
             expect(response.body.user.email).toBe(newUser.email);
-            console.log(response.headers);
-            expect(response.status).toEqual(200);
         });
-});
 
-// test("registering with password mismatch returns error", async () => {
-//   const newUser = {
-//     email: "newuseremail@email.com",
-//     name: "testuser",
-//     password: "password123",
-//     "password-confirm": "password1234"
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(400)
-//     .expect({
-//       body : {
-//         ...newUser,
-//       },
-//       errors: ["Oops! Your passwords do not match"]
-//     });
-// });
-// test("registering with empty password returns error", async () => {
-//   const newUser = {
-//     email: "newuseremail@email.com",
-//     name: "testuser",
-//     password: "",
-//     "password-confirm": ""
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(400)
-//     .expect({
-//       body : {
-//         ...newUser,
-//       },
-//       errors: ["Password Cannot be Blank!", "Confirmed Password cannot be blank!"]
-//     });
-// });
-//
-// test("registering with no name returns error", async () => {
-//   const newUser = {
-//     email: "newuseremail@email.com",
-//     name: "",
-//     password: "password123",
-//     "password-confirm": "password123"
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(400)
-//     .expect({
-//       body : {
-//         ...newUser,
-//       },
-//       errors: ["You must supply a name!"]
-//     });
-// });
-//
-// test("registering with invalid email returns error", async () => {
-//   const newUser = {
-//     email: "newuseremail@",
-//     name: "testuser",
-//     password: "password123",
-//     "password-confirm": "password123"
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(400)
-//     .expect({
-//       body : {
-//         ...newUser,
-//       },
-//       errors: ["That Email is not valid!"]
-//     });
-// });
-//
-// test("test good registration", async () => {
-//   const newUser = {
-//     email: "newuseremail@gmail.com",
-//     name: "testuser",
-//     password: "password123",
-//     "password-confirm": "password123"
-//   };
-//   await request(app.app)
-//     .post("/register")
-//     .send({
-//       ...newUser
-//     })
-//     .expect(302) // redirect
-//     .expect('Location', /\/$/);
-// });
-
-test("user can update their details", async () => {
     await loggedInUser
         .post("/account")
         .send({
@@ -146,4 +162,15 @@ test("user can update their details", async () => {
             email: "newuseremail2@gmail.com",
             name: "testuser2"
         });
+});
+
+test("user cannot update their details unless logged in", async () => {
+    await request
+        .agent(app.app)
+        .post("/account")
+        .send({
+            email: "newuseremail2@gmail.com",
+            name: "testuser2"
+        })
+        .expect(401);
 });
