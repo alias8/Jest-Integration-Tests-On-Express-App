@@ -3,8 +3,9 @@ import request from "supertest";
 import { deleteData, loadData } from "../data/utils";
 import { Store } from "../models/Store";
 import { app } from "../server";
+import { exampleUserWes, loginExistingUser, newUser } from "./util";
 
-let stores: any;
+let allStores: any;
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -12,15 +13,15 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
-    await loadData(); //
-    stores = await Store.find();
+    await loadData();
+    allStores = await Store.find();
 });
 
 test("get all stores", async () => {
     await request(app.app)
         .get("/stores")
         .then(response => {
-            _.isEqual(response.body.stores, stores);
+            _.isEqual(response.body.stores, allStores);
         });
 });
 
@@ -28,7 +29,7 @@ test("get all stores", async () => {
     await request(app.app)
         .get("/")
         .then(response => {
-            expect(response.body.stores.length).toBeGreaterThan(0);
+            _.isEqual(response.body.stores, allStores);
         });
 });
 
@@ -42,37 +43,20 @@ test("get top stores", async () => {
     await request(app.app)
         .get("/top")
         .then(response => {
-            expect(response.body.stores.length).toBeLessThan(stores.length);
+            expect(response.body.stores.length).toBeLessThan(allStores.length);
             expect(
                 response.body.stores.every((store: any) => store.averageRating)
             ).toBe(true); // check ratings field added
         });
 });
 
-test("heart a store", async () => {
-    const newUser = {
-        email: "newuseremail@gmail.com",
-        name: "testuser",
-        password: "password123",
-        "password-confirm": "password123"
-    };
-    const loggedInUser = request.agent(app.app);
+test("heart a store endpoint adds the store id to the user's list of hearted stores", async () => {
+    const loggedInUser = await loginExistingUser();
     await loggedInUser
-        .post("/register")
-        .send({
-            ...newUser
-        })
-        .expect(200)
+        .post(`/api/stores/${allStores![0]._id}/heart`)
         .then((response: any) => {
-            expect(response.body.user.email).toBe(newUser.email);
-        });
-
-    await loggedInUser
-        .post(`/api/stores/${stores![0]._id}/heart`)
-        .then((response: any) => {
-            expect(response.body.user.email).toBe(newUser.email);
             expect(
-                response.body.user.hearts.includes(stores![0]._id.toString())
+                response.body.user.hearts.includes(allStores![0]._id.toString())
             ).toBe(true);
         });
 });
@@ -80,6 +64,25 @@ test("heart a store", async () => {
 test("heart a store only works when logged in", async () => {
     await request
         .agent(app.app)
-        .post(`/api/stores/${stores![0]._id}/heart`)
+        .post(`/api/stores/${allStores![0]._id}/heart`)
         .expect(401);
+});
+
+test("get hearted stores associated with a user", async () => {
+    const loggedInUser = await loginExistingUser();
+    await loggedInUser.post(`/hearts`).then((response: any) => {
+        const storeIDs = response.body.stores.map((store: any) => store._id);
+        expect(_.isEqual(exampleUserWes.hearts, storeIDs));
+    });
+});
+
+test("get stores near a lat/long location", async () => {
+    await request
+        .agent(app.app)
+        .post("/api/stores/near")
+        .send({
+            lat: "100",
+            lng: "0"
+        })
+        .expect(200);
 });

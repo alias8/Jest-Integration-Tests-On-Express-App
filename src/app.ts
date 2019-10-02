@@ -23,6 +23,7 @@ class App {
     private databaseConnected: boolean = false;
 
     constructor(controllers: IController[]) {
+        console.log("constructor called1");
         this.app = express();
         this.app.set("port", process.env.PORT);
         this.app.set("view engine", "pug");

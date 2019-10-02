@@ -59,6 +59,7 @@ export class StoreController implements IController {
         this.router.get("/tags/:tag", catchErrors(this.getStoresByTag));
         this.router.get("/api/search", catchErrors(this.searchStores));
         this.router.get("/api/stores/near", catchErrors(this.mapStores));
+
         this.router.post(
             "/api/stores/:id/heart",
             AuthenticationController.isLoggedIn,
@@ -69,7 +70,6 @@ export class StoreController implements IController {
             AuthenticationController.isLoggedIn,
             catchErrors(this.getHearts)
         );
-
         this.router.get("/", catchErrors(this.getStores));
         this.router.get("/stores", catchErrors(this.getStores));
         this.router.get("/top", catchErrors(this.getTopStores));
