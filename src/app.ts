@@ -27,9 +27,14 @@ class App {
         this.app.set("port", process.env.PORT);
         this.app.set("view engine", "pug");
 
-        this.setupPassport();
-        this.initializeLogins();
-        this.setupMiddleware();
+        /*
+         * From what I've read online, initializeSessions must come first,
+         * the order of the other two doesn't appear to matter?
+         * */
+        this.initializeSessions(); // 1
+        this.setupMiddleware(); // 3
+        this.setupPassport(); // 2
+
         this.initializeControllers(controllers);
         this.initializeErrorHandling();
     }
@@ -66,16 +71,13 @@ class App {
             });
     }
 
-    private setupPassport() {
-        passport.use(User.createStrategy());
-        passport.serializeUser(User.serializeUser());
-        passport.deserializeUser(User.deserializeUser());
-    }
-
-    private initializeLogins() {
+    /*
+     * 1: Sessions
+     * Sessions allow us to store data on visitors from request to request
+     * This keeps users logged in and allows us to sendEmail flash messages
+     * */
+    private initializeSessions() {
         const MongoStore = mongo(session);
-        // Sessions allow us to store data on visitors from request to request
-        // This keeps users logged in and allows us to sendEmail flash messages
         this.app.use(
             session({
                 name: process.env.KEY,
@@ -87,7 +89,6 @@ class App {
                 })
             })
         );
-
         // promisify some callback based APIs
         this.app.use((req, res, next) => {
             (req as any).login = promisify(req.login.bind(req));
@@ -95,6 +96,18 @@ class App {
         });
     }
 
+    /*
+     * 2. Passport initialise. Must be done AFTER initializeSessions().
+     * */
+    private setupPassport() {
+        passport.use(User.createStrategy());
+        passport.serializeUser(User.serializeUser());
+        passport.deserializeUser(User.deserializeUser());
+    }
+
+    /*
+     * 3. Setup middleware. Must be done AFTER initializeSessions().
+     * */
     private setupMiddleware() {
         // Takes the raw requests and turns them into usable properties on req.body
         this.app.use(bodyParser.json());
