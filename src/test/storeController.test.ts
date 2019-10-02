@@ -1,8 +1,10 @@
 import _ from "lodash";
 import request from "supertest";
 import { deleteData, loadData } from "../data/utils";
+import { Store } from "../models/Store";
 import { app } from "../server";
-import { login, newUser, register } from "./util";
+
+let stores: any;
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -11,24 +13,14 @@ beforeAll(async () => {
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
     await loadData(); //
-    // login wes
-    await request(app.app)
-        .post("/login")
-        .type("form")
-        .send({
-            email: "wes@example.com",
-            password: "wes"
-        })
-        .then(response => {
-            expect(response.body.user.email).toBe("wes@example.com");
-        });
+    stores = await Store.find();
 });
 
 test("get all stores", async () => {
     await request(app.app)
         .get("/stores")
         .then(response => {
-            expect(response.body.stores.length).toBeGreaterThan(0);
+            _.isEqual(response.body.stores, stores);
         });
 });
 
@@ -47,14 +39,6 @@ test("get all stores page out of bounds", async () => {
 });
 
 test("get top stores", async () => {
-    let stores;
-    await request(app.app)
-        .get("/stores")
-        .then(response => {
-            stores = response.body.stores;
-            expect(response.body.stores.length).toBeGreaterThan(0);
-        });
-
     await request(app.app)
         .get("/top")
         .then(response => {
@@ -66,16 +50,36 @@ test("get top stores", async () => {
 });
 
 test("heart a store", async () => {
-    let stores: any;
-    await request(app.app)
-        .get("/stores")
-        .then(response => {
-            stores = response.body.stores;
-            expect(response.body.stores.length).toBeGreaterThan(0);
+    const newUser = {
+        email: "newuseremail@gmail.com",
+        name: "testuser",
+        password: "password123",
+        "password-confirm": "password123"
+    };
+    const loggedInUser = request.agent(app.app);
+    await loggedInUser
+        .post("/register")
+        .send({
+            ...newUser
+        })
+        .expect(200)
+        .then((response: any) => {
+            expect(response.body.user.email).toBe(newUser.email);
         });
-    await request(app.app)
+
+    await loggedInUser
         .post(`/api/stores/${stores![0]._id}/heart`)
-        .expect({
-            user: ""
+        .then((response: any) => {
+            expect(response.body.user.email).toBe(newUser.email);
+            expect(
+                response.body.user.hearts.includes(stores![0]._id.toString())
+            ).toBe(true);
         });
+});
+
+test("heart a store only works when logged in", async () => {
+    await request
+        .agent(app.app)
+        .post(`/api/stores/${stores![0]._id}/heart`)
+        .expect(401);
 });
