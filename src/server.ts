@@ -6,15 +6,14 @@ import { AuthenticationController } from "./controllers/authController";
 import { StoreController } from "./controllers/storeController";
 import { UserController } from "./controllers/userController";
 
-console.log(`yargs.argv.configEnvironment: ${JSON.stringify(yargs.argv)}`);
+if (!["dev", "test", "prod"].some(env => process.env.ENV!.toString())) {
+    throw new Error(
+        "Environment must be set in the npm script eg. ENV=dev, ENV=test, ENV=prod"
+    );
+}
 
 dotenv.config({
-    path: path.resolve(
-        __dirname,
-        "config",
-        yargs.argv.configEnvironment as string,
-        ".env"
-    )
+    path: path.resolve(__dirname, "config", process.env.ENV as string, ".env")
 });
 
 export const app = new App([

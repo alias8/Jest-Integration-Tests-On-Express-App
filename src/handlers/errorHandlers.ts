@@ -68,23 +68,11 @@ export const developmentErrors = (
     response: Response,
     next: NextFunction
 ) => {
-    err.stack = err.stack || "";
-    const errorDetails = {
-        message: err.message,
-        stackHighlighted: err.stack.replace(
-            /[a-z_-\d]+.js:\d+:\d+/gi,
-            "<mark>$&</mark>"
-        ),
-        status: err.status
-    };
     response.status(err.status || 500);
-    response.format({
-        // Form Submit, Reload the page
-        "application/json": () => response.json(errorDetails), // Ajax call, sendEmail JSON back
-        // Based on the `Accept` http header
-        "text/html": () => {
-            response.render("error", errorDetails);
-        }
+    response.send({
+        message: err.message,
+        stackHighlighted: err.stack || "",
+        status: err.status
     });
 };
 
@@ -100,7 +88,7 @@ export const productionErrors = (
     next: NextFunction
 ) => {
     response.status(err.status || 500);
-    response.render("error", {
+    response.send({
         error: {},
         message: err.message
     });

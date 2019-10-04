@@ -11,7 +11,7 @@ import mongodbErrorHandler from "mongoose-mongodb-errors";
 import passportLocalMongoose from "passport-local-mongoose";
 import validator from "validator";
 
-export interface IUserModel extends PassportLocalDocument {
+export interface IUserDocument extends PassportLocalDocument {
     email: string;
     name: string;
     resetPasswordToken: string | undefined;
@@ -19,7 +19,7 @@ export interface IUserModel extends PassportLocalDocument {
     hearts: mongoose.Schema.Types.ObjectId[];
 }
 
-const userSchema = new Schema<IUserModel>({
+const userSchema = new Schema<IUserDocument>({
     email: {
         lowercase: true,
         required: "Please supply an email address",
@@ -46,7 +46,7 @@ userSchema.virtual("gravatar").get(function() {
     return `https://gravatar.com/avatar/${hash}?s=200`;
 });
 
-export const User: PassportLocalModel<IUserModel> = model<IUserModel>(
+export const User: PassportLocalModel<IUserDocument> = model<IUserDocument>(
     "User",
     userSchema as PassportLocalSchema
 );

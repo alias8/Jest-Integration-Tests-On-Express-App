@@ -1,11 +1,13 @@
 import _ from "lodash";
 import request from "supertest";
 import { deleteData, loadData } from "../data/utils";
-import { Store } from "../models/Store";
+import { IStoreDocument, Store } from "../models/Store";
+import { IUserDocument, User } from "../models/User";
 import { app } from "../server";
 import { exampleUserWes, loginExistingUser, newUser } from "./util";
 
-let allStores: any;
+let allStores: IStoreDocument[];
+let allUsers: IUserDocument[];
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -15,6 +17,7 @@ beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
     await loadData();
     allStores = await Store.find();
+    allUsers = await User.find();
 });
 
 test("get all stores", async () => {
@@ -51,38 +54,40 @@ test("get top stores", async () => {
 });
 
 test("heart a store endpoint adds the store id to the user's list of hearted stores", async () => {
+    const storeIDNotHeartedYet = "58c061518060197ca0b52d5e";
     const loggedInUser = await loginExistingUser();
     await loggedInUser
-        .post(`/api/stores/${allStores![0]._id}/heart`)
-        .then((response: any) => {
+        .post(`/api/stores/${storeIDNotHeartedYet}/heart`)
+        .then(response => {
             expect(
-                response.body.user.hearts.includes(allStores![0]._id.toString())
+                response.body.user.hearts.includes(storeIDNotHeartedYet)
             ).toBe(true);
         });
 });
 
 test("heart a store only works when logged in", async () => {
+    const storeIDNotHeartedYet = "58c061518060197ca0b52d5e";
     await request
         .agent(app.app)
-        .post(`/api/stores/${allStores![0]._id}/heart`)
+        .post(`/api/stores/${storeIDNotHeartedYet}/heart`)
         .expect(401);
 });
 
 test("get hearted stores associated with a user", async () => {
     const loggedInUser = await loginExistingUser();
-    await loggedInUser.post(`/hearts`).then((response: any) => {
+    await loggedInUser.post(`/hearts`).then(response => {
         const storeIDs = response.body.stores.map((store: any) => store._id);
-        expect(_.isEqual(exampleUserWes.hearts, storeIDs));
+        expect(_.isEqual(exampleUserWes!.hearts, storeIDs));
     });
 });
 
 test("get stores near a lat/long location", async () => {
     await request
         .agent(app.app)
-        .post("/api/stores/near")
-        .send({
-            lat: "100",
-            lng: "0"
+        .get("/api/stores/near")
+        .query({
+            lat: "43.2557206",
+            lng: "-79.87110239999998"
         })
         .expect(200);
 });

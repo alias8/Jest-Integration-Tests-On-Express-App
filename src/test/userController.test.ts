@@ -1,6 +1,7 @@
 import request from "supertest";
 import { deleteData, loadData } from "../data/utils";
 import { app } from "../server";
+import { loginExistingUser } from "./util";
 
 /*
 * It seems authentication only works when we do it like this: const loggedInUser = request.agent(app.app);
@@ -22,6 +23,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
+    await loadData();
 });
 
 test("registering with password mismatch returns error", async () => {
@@ -135,23 +137,7 @@ test("test good registration", async () => {
 });
 
 test("user can update their details", async () => {
-    const newUser = {
-        email: "newuseremail@gmail.com",
-        name: "testuser",
-        password: "password123",
-        "password-confirm": "password123"
-    };
-    const loggedInUser = request.agent(app.app);
-    await loggedInUser
-        .post("/register")
-        .send({
-            ...newUser
-        })
-        .expect(200)
-        .then((response: any) => {
-            expect(response.body.user.email).toBe(newUser.email);
-        });
-
+    const loggedInUser = await loginExistingUser();
     await loggedInUser
         .post("/account")
         .send({

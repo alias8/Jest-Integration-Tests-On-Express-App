@@ -6,8 +6,8 @@
     "node": "10.x"
   },
   "scripts": {
-    "dev": "ts-node ./src/index.ts --configEnvironment=dev",
-    "test": "jest --runInBand --configEnvironment=test --testTimeout=15000",
+    "dev": "ENV=dev ts-node ./src/index.ts",
+    "test": "ENV=test jest --runInBand --testTimeout=15000 --coverage",
     "add-sample-data": "ts-node ./src/data/sample-data.ts",
     "delete-sample-data": "ts-node ./src/data/sample-data.ts --delete",
     "email": "ts-node ./src/handlers/mail.ts --configEnvironment=test"
@@ -47,9 +47,10 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
-      "tslint --config tslint.json --fix",
+      "tslint --fix",
       "git add"
-    ]
+    ],
+    "ignore": ["node_modules", "coverage"]
   },
   "devDependencies": {
     "@types/autoprefixer": "^9.4.0",

@@ -23,7 +23,6 @@ class App {
     private databaseConnected: boolean = false;
 
     constructor(controllers: IController[]) {
-        console.log("constructor called1");
         this.app = express();
         this.app.set("port", process.env.PORT);
         this.app.set("view engine", "pug");
@@ -140,17 +139,14 @@ class App {
         // If that above routes didnt work, we 404 them and forward to error handler
         this.app.use(errorHandlers.notFound);
 
-        // One of our error handlers will see if these errors are just validation errors
-        this.app.use(errorHandlers.flashValidationErrors);
-
         // Otherwise this was a really bad error we didn't expect! Shoot eh
-        if (this.app.get("env") === "development") {
+        if (process.env.ENV === "dev" || process.env.ENV === "test") {
             /* Development Error Handler - Prints stack trace */
             this.app.use(errorHandlers.developmentErrors);
+        } else {
+            // production error handler
+            this.app.use(errorHandlers.productionErrors);
         }
-
-        // production error handler
-        this.app.use(errorHandlers.productionErrors);
     }
 }
 

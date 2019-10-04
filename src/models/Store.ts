@@ -2,7 +2,7 @@ import dompurify from "dompurify";
 import mongoose, { model } from "mongoose";
 // @ts-ignore
 import slug from "slugs";
-import { IUserModel } from "./User";
+import { IUserDocument } from "./User";
 
 export interface IStoreDocument extends mongoose.Document {
     name: string;
@@ -168,7 +168,7 @@ storeSchema.statics.getTopStores = function() {
     ]);
 };
 
-export const Store: IStoreModel = mongoose.model<IStoreDocument, IStoreModel>(
+export const Store: IStoreModel = model<IStoreDocument, IStoreModel>(
     "Store",
     storeSchema
 );

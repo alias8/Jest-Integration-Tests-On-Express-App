@@ -1,8 +1,15 @@
 import request from "supertest";
-import { deleteData } from "../data/utils";
+import { deleteData, loadData } from "../data/utils";
 import { User } from "../models/User";
 import { app } from "../server";
-import { login, logout, newUser, register } from "./util";
+import {
+    exampleUserWes,
+    login,
+    loginExistingUser,
+    logout,
+    newUser,
+    register
+} from "./util";
 
 beforeAll(async () => {
     await app.connectToTheDatabase(); // takes about 2 seconds
@@ -10,22 +17,24 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await deleteData(); // takes about 0.5 seconds
+    await loadData();
 });
 
 async function sendResetEmail() {
-    let user = await register();
+    const loggedInUser = await loginExistingUser();
+    let user = await User.findOne({ email: exampleUserWes!.email });
     expect(user!.resetPasswordToken).toBe(undefined);
-    await request(app.app)
+    await loggedInUser
         .post("/account/forgot")
         .send({
-            email: newUser.email
+            email: user!.email
         })
         .then(response => {
             expect(response.body.message).toBe(
-                `A password reset email has been sent to ${newUser.email}`
+                `A password reset email has been sent to ${user!.email}`
             );
         });
-    user = await login();
+    user = await User.findOne({ email: exampleUserWes!.email });
     expect(user!.resetPasswordToken).not.toBe(undefined);
     return user;
 }
@@ -58,11 +67,8 @@ test("test token reset with valid token", async () => {
 
 test("test token reset with invalid token", async () => {
     const user = await sendResetEmail();
-    const userInDatabase = await User.findOne({
-        email: user.email
-    });
-    userInDatabase!.resetPasswordExpires = Date.now() - 1000 * 60;
-    await userInDatabase!.save();
+    user!.resetPasswordExpires = Date.now() - 1000 * 60;
+    await user!.save();
     await request(app.app)
         .get(`/account/reset/${user!.resetPasswordToken}`)
         .expect({

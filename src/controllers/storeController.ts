@@ -7,7 +7,7 @@ import uuid from "uuid";
 import { IController } from "../app";
 import { catchErrors } from "../handlers/errorHandlers";
 import { IStoreDocument, Store } from "../models/Store";
-import { IUserModel, User } from "../models/User";
+import { IUserDocument, User } from "../models/User";
 import { AuthenticationController } from "./authController";
 
 export class StoreController implements IController {
@@ -58,8 +58,8 @@ export class StoreController implements IController {
         this.router.get("/tags", catchErrors(this.getStoresByTag));
         this.router.get("/tags/:tag", catchErrors(this.getStoresByTag));
         this.router.get("/api/search", catchErrors(this.searchStores));
-        this.router.get("/api/stores/near", catchErrors(this.mapStores));
 
+        this.router.get("/api/stores/near", catchErrors(this.mapStores));
         this.router.post(
             "/api/stores/:id/heart",
             AuthenticationController.isLoggedIn,
@@ -152,7 +152,7 @@ export class StoreController implements IController {
         response.redirect(`/store/${store.slug}`);
     };
 
-    private confirmOwner = (store: IStoreDocument, user: IUserModel) => {
+    private confirmOwner = (store: IStoreDocument, user: IUserDocument) => {
         if (!store.author.equals(user._id)) {
             throw Error("You must own a store in order to edit it!");
         }
@@ -271,33 +271,33 @@ export class StoreController implements IController {
                         coordinates,
                         type: "Point"
                     },
-                    $maxDistance: 10000 // 10km
+                    $maxDistance: 10 * 1000 // 10km
                 }
             }
         };
         const stores = await Store.find(query)
             .select("slug name description location photo")
             .limit(10);
-        response.json(stores);
+        response.json({ stores });
     };
 
     private heartStore = async (
         request: express.Request,
         response: express.Response
     ) => {
-        // find store with that id
         // @ts-ignore
-        const hearts = request.user.hearts.map((obj: any) => {
-            return obj.toString();
-        });
-        const operator = hearts.includes(request.params.id)
+        const operator = request.user.hearts.includes(request.params.id)
             ? "$pull"
             : "$addToSet";
 
         const user = await User.findByIdAndUpdate(
             // @ts-ignore
             request.user._id,
-            { [operator]: { hearts: request.params.id } },
+            {
+                [operator]: {
+                    hearts: request.params.id
+                }
+            },
             { new: true }
         );
         response.json({ user });

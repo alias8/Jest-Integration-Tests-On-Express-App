@@ -1,6 +1,6 @@
 import request from "supertest";
 import users from "../data/users.json";
-import { IUserModel } from "../models/User";
+import { IUserDocument } from "../models/User";
 import { app } from "../server";
 
 export const newUser = {
@@ -9,12 +9,13 @@ export const newUser = {
     password: "password123",
     "password-confirm": "password123"
 };
-export const exampleUserWes = users.filter(
+export const exampleUserWes = users.find(
     user => user.email === "wes@example.com"
-)[0];
+);
 
-export async function register(): Promise<IUserModel> {
-    return await request(app.app)
+export async function register(): Promise<request.SuperTest<request.Test>> {
+    const loggedInNewUser = request.agent(app.app);
+    await loggedInNewUser
         .post("/register")
         .send({
             ...newUser
@@ -23,6 +24,7 @@ export async function register(): Promise<IUserModel> {
             expect(response.body.user.email).toBe(newUser.email);
             return response.body.user;
         });
+    return loggedInNewUser;
 }
 
 export async function loginExistingUser(): Promise<
@@ -33,16 +35,16 @@ export async function loginExistingUser(): Promise<
         .post("/login")
         .type("form")
         .send({
-            email: exampleUserWes.email,
+            email: exampleUserWes!.email,
             password: "wes"
         })
         .then(response => {
-            expect(response.body.user.email).toBe(exampleUserWes.email);
+            expect(response.body.user.email).toBe(exampleUserWes!.email);
         });
     return loggedInUser;
 }
 
-export async function login(): Promise<IUserModel> {
+export async function login() {
     return await request(app.app)
         .post("/login")
         .type("form")
@@ -52,8 +54,6 @@ export async function login(): Promise<IUserModel> {
         })
         .then(response => {
             expect(response.body.user.email).toBe(newUser.email);
-            expect(response.body.authenticated).toBe(true);
-            return response.body;
         });
 }
 

@@ -6,14 +6,14 @@ import nodemailer from "nodemailer";
 import path from "path";
 import pug from "pug";
 import yargs from "yargs";
-import { IUserModel } from "../models/User";
+import { IUserDocument } from "../models/User";
 
 dotenv.config({
     path: path.resolve(
         __dirname,
         "..",
         "config",
-        yargs.argv.configEnvironment as string,
+        process.env.ENV as string,
         ".env"
     )
 });
@@ -58,7 +58,7 @@ export const sendEmail = async ({
     resetURL,
     filename
 }: {
-    user: IUserModel;
+    user: IUserDocument;
     subject: string;
     resetURL: string;
     filename: string;

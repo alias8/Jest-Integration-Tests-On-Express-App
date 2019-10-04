@@ -6,7 +6,7 @@ import passport from "passport";
 import { IController } from "../app";
 import { catchErrors } from "../handlers/errorHandlers";
 import { sendEmail } from "../handlers/mail";
-import { IUserModel, User } from "../models/User";
+import { IUserDocument, User } from "../models/User";
 import { StoreController } from "./storeController";
 
 export class AuthenticationController implements IController {
@@ -141,7 +141,7 @@ export class AuthenticationController implements IController {
         request: express.Request,
         response: express.Response
     ) => {
-        const user: IUserModel | null = await User.findOne({
+        const user: IUserDocument | null = await User.findOne({
             resetPasswordExpires: { $gt: Date.now() },
             resetPasswordToken: request.params.token
         });
