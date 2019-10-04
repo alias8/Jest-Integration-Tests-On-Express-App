@@ -57,8 +57,8 @@ export class StoreController implements IController {
         this.router.get("/store/:slug", catchErrors(this.getStoreBySlug)); // clicking on individual store
         this.router.get("/tags", catchErrors(this.getStoresByTag));
         this.router.get("/tags/:tag", catchErrors(this.getStoresByTag));
-        this.router.get("/api/search", catchErrors(this.searchStores));
 
+        this.router.get("/api/search", catchErrors(this.searchStores));
         this.router.get("/api/stores/near", catchErrors(this.mapStores));
         this.router.post(
             "/api/stores/:id/heart",
@@ -225,7 +225,7 @@ export class StoreController implements IController {
         const tagsPromise = Store.getTagsList();
         const storesPromise = Store.find({ tags: tagQuery });
         const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
-        response.render("tag", { tag, tags, stores, title: "Tags" });
+        response.json({tags, stores});
     };
 
     private searchStores = async (
@@ -254,7 +254,7 @@ export class StoreController implements IController {
             })
             // limit to 5 result
             .limit(5);
-        response.json(stores);
+        response.json({stores});
     };
 
     private mapStores = async (
