@@ -1,40 +1,18 @@
 {
-  store: {
-    location: {
-      type: 'Point',
-      address: 'The Harbour Diner, James Street North, Hamilton, ON, Canada',
-      coordinates: [
-        Array
-      ]
-    },
-    created: '2017-03-08T19:31:44.389Z',
-    tags: [],
-    _id: '58c05c208060197ca0b52d58',
-    slug: 'the-harbour-diner',
-    name: 'The Harbour Diner',
-    description: 'Classic diner eats like eggs Benedict & club sandwiches star at this charming, old-timey nook.',
-    author: {
-      hearts: [
-        Array
-      ],
-      _id: '58c039018060197ca0b52d4c',
-      email: 'wes@example.com',
-      name: 'Wes Bos',
-      __v: 0
-    },
-    photo: 'b5792f01-41c8-41b7-906d-1bdb411e4a55.jpeg',
-    __v: 0,
-    reviews: [
-      [
-        Object
-      ],
-      [
-        Object
-      ],
-      [
-        Object
-      ]
+  "__v": 0,
+  "_id": "58c03ac18060197ca0b52d51",
+  "author": {
+    "__v": 0,
+    "_id": "58c039018060197ca0b52d4c",
+    "email": "wes@example.com",
+    "hearts": [
+      "58c039938060197ca0b52d4d",
+      "58c03a428060197ca0b52d4f"
     ],
-    id: '58c05c208060197ca0b52d58'
-  }
+    "name": "Wes Bos"
+  },
+  "created": "2017-03-08T17:09:21.627Z",
+  "rating": 5,
+  "store": "58c03a958060197ca0b52d50",
+  "text": "I tried this place last week and it was incredible! Amazing selection of local and imported brews and the food is to die for! "
 }

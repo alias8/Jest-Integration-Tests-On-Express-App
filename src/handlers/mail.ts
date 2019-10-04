@@ -8,6 +8,12 @@ import pug from "pug";
 import yargs from "yargs";
 import { IUserDocument } from "../models/User";
 
+if (!["dev", "test", "prod"].some(env => process.env.ENV!.toString())) {
+    throw new Error(
+        "Environment must be set in the npm script eg. ENV=dev, ENV=test, ENV=prod"
+    );
+}
+
 dotenv.config({
     path: path.resolve(
         __dirname,

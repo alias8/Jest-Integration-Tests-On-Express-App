@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for src/data/utils.ts</title>
+    <title>Code coverage report for src/controllers/reviewController.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,13 +16,13 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">All files</a> / <a href="index.html">src/data</a> utils.ts
+      <a href="../../index.html">All files</a> / <a href="index.html">src/controllers</a> reviewController.ts
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.24% </span>
+        <span class="strong">93.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/17</span>
+        <span class='fraction'>14/15</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/2</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.24% </span>
+        <span class="strong">93.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/17</span>
+        <span class='fraction'>14/15</span>
       </div>
     </div>
     <p class="quiet">
@@ -71,17 +71,39 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -89,37 +111,42 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Store } from "../models/Store";
-import { User } from "../models/User";
-import reviews from "./reviews.json";
-import stores from "./stores.json";
-import users from "./users.json";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
+import { IController } from "../app";
+import { catchErrors } from "../handlers/errorHandlers";
 import { Review } from "../models/Review";
+import { AuthenticationController } from "./authController";
 &nbsp;
-export async function deleteData() {
-    await Store.deleteMany({  });
-    await Review.deleteMany({});
-    await User.deleteMany({  });
-}
+export class ReviewController implements IController {
+    public router = express.Router();
 &nbsp;
-export async function loadData() {
-    try {
-        await Store.insertMany(stores);
-        await Review.insertMany(reviews);
-        await User.insertMany(users);
-    } catch (e) {
-<span class="cstat-no" title="statement not covered" >        console.log(</span>
-            "Error! The Error info is below but if you are importing sample data make sure to drop the existing database first"
-        );
-<span class="cstat-no" title="statement not covered" >        console.log(e);</span>
+    constructor() {
+        this.initializeRoutes();
     }
+&nbsp;
+    private initializeRoutes() {
+        this.router.post(
+            "/reviews/:id",
+            AuthenticationController.isLoggedIn,
+            catchErrors(this.addReview)
+        );
+    }
+&nbsp;
+    private addReview = async (
+        request: express.Request,
+        response: express.Response
+    ) =&gt; {
+        // @ts-ignore
+        request.body.author = request.user._id;
+        request.body.store = request.params.id;
+        console.log(`adding review: ${JSON.stringify(request.body)}`);
+        const newReview = new Review(request.body);
+        await newReview.save();
+<span class="cstat-no" title="statement not covered" >        response.redirect("back");</span>
+    };
 }
 &nbsp;</pre></td></tr>
 </table></pre>

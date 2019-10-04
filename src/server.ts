@@ -5,6 +5,7 @@ import App from "./app";
 import { AuthenticationController } from "./controllers/authController";
 import { StoreController } from "./controllers/storeController";
 import { UserController } from "./controllers/userController";
+import { ReviewController } from "./controllers/reviewController";
 
 if (!["dev", "test", "prod"].some(env => process.env.ENV!.toString())) {
     throw new Error(
@@ -19,5 +20,6 @@ dotenv.config({
 export const app = new App([
     new UserController(),
     new StoreController(),
+    new ReviewController(),
     new AuthenticationController()
 ]);
