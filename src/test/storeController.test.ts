@@ -129,3 +129,26 @@ test("get tags", async () => {
             ).toBeGreaterThan(0);
         });
 });
+
+test("get store by slug and the associated reviews", async () => {
+    await request
+        .agent(app.app)
+        .get("/store/rust-city-brewery")
+        .then(response => {
+            expect(
+                response.body.store.author
+            ).not.toBe(undefined);
+            expect(
+                response.body.store.reviews
+            ).not.toBe(undefined);
+        });
+});
+
+test("get store by incorrect slug and the associated reviews returns empty array", async () => {
+    await request
+        .agent(app.app)
+        .get("/store/wontbefound")
+        .expect({
+            store: []
+        })
+});

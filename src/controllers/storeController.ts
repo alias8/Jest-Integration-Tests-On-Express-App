@@ -49,15 +49,10 @@ export class StoreController implements IController {
             catchErrors(this.resize),
             catchErrors(this.updateStore)
         );
-        this.router.get(
-            "/stores/:id/edit",
-            AuthenticationController.isLoggedIn,
-            catchErrors(this.editStore)
-        ); // clicking on pencil icon
+
         this.router.get("/store/:slug", catchErrors(this.getStoreBySlug)); // clicking on individual store
         this.router.get("/tags", catchErrors(this.getStoresByTag));
         this.router.get("/tags/:tag", catchErrors(this.getStoresByTag));
-
         this.router.get("/api/search", catchErrors(this.searchStores));
         this.router.get("/api/stores/near", catchErrors(this.mapStores));
         this.router.post(
@@ -110,13 +105,6 @@ export class StoreController implements IController {
         });
     };
 
-    private homePage = (
-        request: express.Request,
-        response: express.Response
-    ) => {
-        response.render("index");
-    };
-
     private resize = async (
         request: express.Request,
         response: express.Response,
@@ -158,26 +146,6 @@ export class StoreController implements IController {
         }
     };
 
-    private editStore = async (
-        request: express.Request,
-        response: express.Response
-    ) => {
-        // 1. find store given id
-        const store: IStoreDocument | null = await Store.findOne({
-            _id: request.params.id
-        });
-        if (store) {
-            // 2. confirm they are owner of store
-            // @ts-ignore
-            this.confirmOwner(store, request.user);
-            // 3. render out the edit form so the user can update their store
-            response.render("editStore", {
-                store,
-                title: `Edit ${store!.name}`
-            });
-        }
-    };
-
     private updateStore = async (
         request: express.Request,
         response: express.Response
@@ -209,10 +177,9 @@ export class StoreController implements IController {
             slug: request.params.slug
         }).populate("author reviews"); // populate means insert the entire author and reviews objects, not just their ids
         if (!store) {
-            next();
-            return;
+            response.json({store: []});
         }
-        response.render("store", { title: `Welcome to ${store.name}`, store });
+        response.json({store});
     };
 
     private getStoresByTag = async (

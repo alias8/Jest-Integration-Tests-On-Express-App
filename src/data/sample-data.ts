@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import path from "path";
-import yargs from "yargs";
 import { deleteData, loadData } from "./utils";
 
 dotenv.config({
     path: path.resolve(
       __dirname,
       "config",
-      yargs.argv.configEnvironment as string || "dev",
+        process.env.ENV as string,
       ".env"
     )
 });
