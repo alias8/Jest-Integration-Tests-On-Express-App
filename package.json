@@ -50,7 +50,10 @@
       "tslint --fix",
       "git add"
     ],
-    "ignore": ["node_modules", "coverage"]
+    "ignore": [
+      "node_modules",
+      "coverage"
+    ]
   },
   "devDependencies": {
     "@types/autoprefixer": "^9.4.0",

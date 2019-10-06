@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1570168841316" clover="3.2.0">
-  <project timestamp="1570168841317" name="All files">
-    <metrics statements="409" coveredstatements="236" conditionals="69" coveredconditionals="18" methods="80" coveredmethods="34" elements="558" coveredelements="288" complexity="0" loc="409" ncloc="409" packages="6" files="13" classes="13"/>
+<coverage generated="1570258329064" clover="3.2.0">
+  <project timestamp="1570258329064" name="All files">
+    <metrics statements="408" coveredstatements="239" conditionals="69" coveredconditionals="16" methods="80" coveredmethods="35" elements="557" coveredelements="290" complexity="0" loc="408" ncloc="408" packages="6" files="13" classes="13"/>
     <package name="src">
       <metrics statements="62" coveredstatements="56" conditionals="12" coveredconditionals="7" methods="15" coveredmethods="12"/>
-      <file name="app.ts" path="/Users/jkirk/dev/express-jest-testing/src/app.ts">
+      <file name="app.ts" path="/home/james/dev/express-jest-testing/src/app.ts">
         <metrics statements="51" coveredstatements="46" conditionals="10" coveredconditionals="6" methods="14" coveredmethods="11"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -37,8 +37,8 @@
         <line num="80" count="1" type="stmt"/>
         <line num="81" count="1" type="stmt"/>
         <line num="93" count="1" type="stmt"/>
-        <line num="94" count="2" type="stmt"/>
-        <line num="95" count="2" type="stmt"/>
+        <line num="94" count="3" type="stmt"/>
+        <line num="95" count="3" type="stmt"/>
         <line num="103" count="1" type="stmt"/>
         <line num="104" count="1" type="stmt"/>
         <line num="105" count="1" type="stmt"/>
@@ -49,7 +49,7 @@
         <line num="123" count="1" type="stmt"/>
         <line num="124" count="1" type="stmt"/>
         <line num="127" count="1" type="stmt"/>
-        <line num="128" count="2" type="stmt"/>
+        <line num="128" count="3" type="stmt"/>
         <line num="133" count="1" type="stmt"/>
         <line num="134" count="4" type="stmt"/>
         <line num="140" count="1" type="stmt"/>
@@ -58,7 +58,7 @@
         <line num="148" count="0" type="stmt"/>
         <line num="153" count="1" type="stmt"/>
       </file>
-      <file name="server.ts" path="/Users/jkirk/dev/express-jest-testing/src/server.ts">
+      <file name="server.ts" path="/home/james/dev/express-jest-testing/src/server.ts">
         <metrics statements="11" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -74,8 +74,8 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="213" coveredstatements="94" conditionals="32" coveredconditionals="1" methods="36" coveredmethods="11"/>
-      <file name="authController.ts" path="/Users/jkirk/dev/express-jest-testing/src/controllers/authController.ts">
+      <metrics statements="212" coveredstatements="97" conditionals="32" coveredconditionals="2" methods="36" coveredmethods="12"/>
+      <file name="authController.ts" path="/home/james/dev/express-jest-testing/src/controllers/authController.ts">
         <metrics statements="61" coveredstatements="26" conditionals="10" coveredconditionals="1" methods="11" coveredmethods="4"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -139,8 +139,8 @@
         <line num="161" count="0" type="stmt"/>
         <line num="162" count="0" type="stmt"/>
       </file>
-      <file name="reviewController.ts" path="/Users/jkirk/dev/express-jest-testing/src/controllers/reviewController.ts">
-        <metrics statements="15" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+      <file name="reviewController.ts" path="/home/james/dev/express-jest-testing/src/controllers/reviewController.ts">
+        <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -155,10 +155,9 @@
         <line num="29" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
         <line num="31" count="1" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
       </file>
-      <file name="storeController.ts" path="/Users/jkirk/dev/express-jest-testing/src/controllers/storeController.ts">
-        <metrics statements="102" coveredstatements="40" conditionals="20" coveredconditionals="0" methods="15" coveredmethods="2"/>
+      <file name="storeController.ts" path="/home/james/dev/express-jest-testing/src/controllers/storeController.ts">
+        <metrics statements="102" coveredstatements="43" conditionals="20" coveredconditionals="1" methods="15" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -232,10 +231,10 @@
         <line num="166" count="0" type="stmt"/>
         <line num="167" count="0" type="stmt"/>
         <line num="171" count="1" type="stmt"/>
-        <line num="176" count="0" type="stmt"/>
-        <line num="179" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="176" count="1" type="stmt"/>
+        <line num="179" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="180" count="0" type="stmt"/>
-        <line num="182" count="0" type="stmt"/>
+        <line num="182" count="1" type="stmt"/>
         <line num="185" count="1" type="stmt"/>
         <line num="190" count="0" type="stmt"/>
         <line num="191" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -262,7 +261,7 @@
         <line num="289" count="0" type="stmt"/>
         <line num="290" count="0" type="stmt"/>
       </file>
-      <file name="userController.ts" path="/Users/jkirk/dev/express-jest-testing/src/controllers/userController.ts">
+      <file name="userController.ts" path="/home/james/dev/express-jest-testing/src/controllers/userController.ts">
         <metrics statements="35" coveredstatements="14" conditionals="2" coveredconditionals="0" methods="7" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -303,7 +302,7 @@
     </package>
     <package name="src.data">
       <metrics statements="17" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-      <file name="utils.ts" path="/Users/jkirk/dev/express-jest-testing/src/data/utils.ts">
+      <file name="utils.ts" path="/home/james/dev/express-jest-testing/src/data/utils.ts">
         <metrics statements="17" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -325,12 +324,12 @@
       </file>
     </package>
     <package name="src.handlers">
-      <metrics statements="47" coveredstatements="25" conditionals="21" coveredconditionals="10" methods="12" coveredmethods="4"/>
-      <file name="errorHandlers.ts" path="/Users/jkirk/dev/express-jest-testing/src/handlers/errorHandlers.ts">
-        <metrics statements="19" coveredstatements="9" conditionals="8" coveredconditionals="3" methods="7" coveredmethods="3"/>
+      <metrics statements="47" coveredstatements="23" conditionals="21" coveredconditionals="7" methods="12" coveredmethods="3"/>
+      <file name="errorHandlers.ts" path="/home/james/dev/express-jest-testing/src/handlers/errorHandlers.ts">
+        <metrics statements="19" coveredstatements="7" conditionals="8" coveredconditionals="0" methods="7" coveredmethods="2"/>
         <line num="15" count="1" type="stmt"/>
         <line num="21" count="20" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
         <line num="29" count="1" type="stmt"/>
         <line num="34" count="0" type="stmt"/>
         <line num="35" count="0" type="stmt"/>
@@ -342,13 +341,13 @@
         <line num="56" count="0" type="stmt"/>
         <line num="57" count="0" type="stmt"/>
         <line num="65" count="1" type="stmt"/>
-        <line num="71" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="72" count="1" type="stmt"/>
+        <line num="71" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="72" count="0" type="stmt"/>
         <line num="84" count="1" type="stmt"/>
         <line num="90" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="91" count="0" type="stmt"/>
       </file>
-      <file name="mail.ts" path="/Users/jkirk/dev/express-jest-testing/src/handlers/mail.ts">
+      <file name="mail.ts" path="/home/james/dev/express-jest-testing/src/handlers/mail.ts">
         <metrics statements="28" coveredstatements="16" conditionals="13" coveredconditionals="7" methods="5" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -381,26 +380,26 @@
       </file>
     </package>
     <package name="src.models">
-      <metrics statements="48" coveredstatements="32" conditionals="4" coveredconditionals="0" methods="7" coveredmethods="2"/>
-      <file name="Review.ts" path="/Users/jkirk/dev/express-jest-testing/src/models/Review.ts">
-        <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <metrics statements="48" coveredstatements="34" conditionals="4" coveredconditionals="0" methods="7" coveredmethods="3"/>
+      <file name="Review.ts" path="/home/james/dev/express-jest-testing/src/models/Review.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
         <line num="46" count="1" type="stmt"/>
         <line num="47" count="1" type="stmt"/>
         <line num="49" count="1" type="stmt"/>
       </file>
-      <file name="Store.ts" path="/Users/jkirk/dev/express-jest-testing/src/models/Store.ts">
+      <file name="Store.ts" path="/home/james/dev/express-jest-testing/src/models/Store.ts">
         <metrics statements="29" coveredstatements="17" conditionals="4" coveredconditionals="0" methods="5" coveredmethods="2"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="26" count="1" type="stmt"/>
         <line num="73" count="1" type="stmt"/>
         <line num="78" count="1" type="stmt"/>
-        <line num="84" count="1" type="stmt"/>
-        <line num="85" count="1" type="stmt"/>
+        <line num="84" count="2" type="stmt"/>
+        <line num="85" count="2" type="stmt"/>
         <line num="88" count="1" type="stmt"/>
         <line num="89" count="1" type="stmt"/>
         <line num="92" count="1" type="stmt"/>
@@ -424,7 +423,7 @@
         <line num="146" count="0" type="stmt"/>
         <line num="171" count="1" type="stmt"/>
       </file>
-      <file name="User.ts" path="/Users/jkirk/dev/express-jest-testing/src/models/User.ts">
+      <file name="User.ts" path="/home/james/dev/express-jest-testing/src/models/User.ts">
         <metrics statements="12" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -442,7 +441,7 @@
     </package>
     <package name="src.test">
       <metrics statements="22" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="3"/>
-      <file name="util.ts" path="/Users/jkirk/dev/express-jest-testing/src/test/util.ts">
+      <file name="util.ts" path="/home/james/dev/express-jest-testing/src/test/util.ts">
         <metrics statements="22" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>

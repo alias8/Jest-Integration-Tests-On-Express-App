@@ -26,7 +26,6 @@ export class ReviewController implements IController {
         // @ts-ignore
         request.body.author = request.user._id;
         request.body.store = request.params.id;
-        console.log(`adding review: ${JSON.stringify(request.body)}`);
         const newReview = new Review(request.body);
         await newReview.save();
         response.redirect("back");
